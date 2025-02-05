@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, send_file
 from backend.services.excel_handler import buscar_numero_parte
 import backend.config as config
 import os
@@ -24,3 +24,6 @@ def index():
         ultima_actualizacion = datetime.fromtimestamp(timestamp_modificacion).strftime('%Y-%m-%d %H:%M:%S')
 
     return render_template("index.html", mensaje=mensaje, filas_resaltadas=filas_resaltadas, ultima_actualizacion=ultima_actualizacion)
+def descargar_excel():
+    ruta_archivo = os.path.join(os.getcwd(), "backend/data/AutomatedLines.xlsx")
+    return send_file(ruta_archivo, as_attachment=True)
