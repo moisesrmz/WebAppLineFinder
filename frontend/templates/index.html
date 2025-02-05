@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Búsqueda de NP por linea de FA.</title>
+    <title>BuscaLíneas.</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
 </head>
 <body>
     <div class="container">
-        <h1>BuscaLineas.</h1>
+        <h1>Búsqueda de línea de FA por NP.</h1>
         <form method="post" action="{{ url_for('views.index') }}">
             <label for="numero_parte">Número de Parte (Molex PN):</label>
             <input type="text" id="numero_parte" name="numero_parte" required autofocus>
