@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>📊 Editor de DB</h1>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div>
+            <label for="hoja" class="form-label">📑 Selecciona una hoja:</label>
+            <select id="hoja" class="form-select">
+                <option value="Hoja1">NPs y housings</option>
+                <option value="Hoja2">EOLs y módulos</option>
+                <option value="Hoja3">NPs por Linea</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" onclick="cargarHoja()">Cargar Datos</button>
+    </div>
+
+    <div class="table-responsive">
+        <table id="excelTable" class="table table-hover table-bordered">
+            <thead>
+                <tr id="tableHeader"></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="btn-group mt-3">
+        <button class="btn btn-primary" onclick="agregarFilaIntermedia()">➕ Insertar Fila</button>
+        <button class="btn btn-primary" onclick="agregarColumnaIntermedia()">➕ Insertar Columna</button>
+        <button class="btn btn-primary" onclick="eliminarFila()">🗑️ Eliminar Fila</button>
+        <button class="btn btn-primary" onclick="eliminarColumna()">🗑️ Eliminar Columna</button>
+    </div>
+
+    <div class="mt-4">
+        <button class="btn btn-primary w-100" onclick="guardarCambios()">💾 Guardar Cambios</button>
+    </div>
+</div>
+
+<!-- Cargar Estilos y Scripts -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/custom_styles.css') }}">
+<script src="{{ url_for('static', filename='js/edit_excel.js') }}"></script>
+
+{% endblock %}

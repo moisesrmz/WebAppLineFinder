@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <h2 class="text-center">🔑 Iniciar Sesión</h2>
+
+        <!-- 🟢 Mostrar mensajes de error o éxito -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('auth.login') }}" class="mt-4">
+            <div class="form-group">
+                <label for="username" class="form-label">👤 Usuario</label>
+                <input type="text" id="username" name="username" class="form-control" required autofocus>
+            </div>
+            <div class="form-group mt-3">
+                <label for="password" class="form-label">🔒 Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">🚀 Ingresar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

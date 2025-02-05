@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_styles.css') }}">
+    <title>{% block title %}Administration{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('views.index') }}">Inicio</a>
+        <a href="{{ url_for('editor.edit_excel') }}">Editar Excel</a>
+    </nav>
+    <main>
+        {% block content %}
+        <p>Bienvenido a la aplicación.</p>  <!-- ✅ Esto se reemplazará con edit_excel.html -->
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2025 Developed by HFM Test Department.</p>
+        <p>|  <a href="mailto:moises.ramirez1@molex.com">Contacto</a> |</p>
+        <p>Última actualización: {{ ultima_actualizacion }}</p>
+    </footer>
+</body>
+</html>

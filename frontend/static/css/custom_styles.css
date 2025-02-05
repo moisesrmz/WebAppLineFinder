@@ -1,0 +1,218 @@
+/* 🌙 Paleta de colores suaves y combinables */
+:root {
+    --primary-color: #495057;   /* Botones y títulos */
+    --secondary-color: #f5f7fa; /* Fondo general */
+    --accent-color: #c3cfe2;    /* Degradado suave */
+    --table-header: #dee2e6;    /* Encabezado de tabla */
+    --table-border: #ccd1d9;    /* Bordes de tabla */
+    --button-hover: #343a40;    /* Hover de botones */
+}
+
+/* 🌙 Fondo general */
+body {
+    background: var(--secondary-color);
+    font-family: 'Arial', sans-serif;
+}
+
+/* 🌙 Contenedor principal para formularios y editores */
+.container {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+/* 🌙 Títulos */
+h1, h2 {
+    color: var(--primary-color);
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 🌙 Estilo de la tabla */
+.table {
+    background-color: white;
+    border-radius: 8px;
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid var(--table-border);
+}
+
+/* 🌙 Bordes visibles en todas las celdas */
+.table th, .table td {
+    border: 1px solid var(--table-border);
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* 🌙 Estilo de encabezados */
+.table th {
+    background-color: var(--table-header);
+    color: var(--primary-color);
+    font-weight: bold;
+    padding: 12px;
+}
+
+/* 🌙 Ajuste de celdas */
+#excelTable th, #excelTable td {
+    min-width: 140px;
+    max-width: 280px;
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+/* 🌙 Contenedor de la tabla con scroll horizontal */
+.table-responsive {
+    overflow-x: auto;  /* ✅ Activa el scroll horizontal */
+    max-width: 100%;   /* ✅ Evita que la tabla sobresalga */
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 🌙 Ajustar la tabla dentro del contenedor */
+.table {
+    width: max-content; /* ✅ Permite que la tabla crezca sin afectar el diseño */
+    min-width: 100%; /* ✅ Asegura que no se vea cortada */
+    border-collapse: collapse;
+}
+
+/* 🟢 Espacio adicional SOLO para Hoja2 */
+#hoja[value="Hoja2"] ~ .table-responsive #excelTable th,
+#hoja[value="Hoja2"] ~ .table-responsive #excelTable td {
+    min-width: 220px;
+    max-width: 400px;
+    padding: 16px;
+}
+
+/* 🌙 Ajuste para inputs dentro de la tabla */
+#excelTable input {
+    width: 100%;
+    min-width: 140px;
+    padding: 8px;
+    border: 1px solid var(--table-border);
+    outline: none;
+    text-align: center;
+    background-color: white;
+    border-radius: 6px;
+}
+
+/* 🟢 Restaurar bordes en la numeración de filas */
+.fila-index {
+    display: flex;
+    flex-direction: column;
+    background-color: #E9ECEF;
+    text-align: right;
+    font-weight: bold;
+    padding: 10px;
+    min-width: 50px;
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    border-right: 2px solid var(--table-border);
+}
+
+/* 🟢 Estilizar los números de fila */
+.fila-numero {
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid var(--table-border);
+    height: 100%;
+}
+
+/* 🌙 Pie de página */
+footer {
+    text-align: center;
+    padding: 1em;
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 100%;
+    border-top: 1px solid var(--table-border);
+    flex-shrink: 0;
+}
+
+/* 🌙 Login - Fondo con degradado */
+.login-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+}
+
+/* 🟢 Caja del login */
+.login-box {
+    width: 100%;
+    max-width: 380px;
+    padding: 35px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 🟢 Título del login */
+.login-box h2 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* 🟢 Estilos para los inputs */
+.login-box .form-group {
+    text-align: left;
+}
+
+.login-box .form-label {
+    font-weight: bold;
+    color: #555;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.login-box .form-control {
+    height: 45px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+    padding: 10px;
+}
+
+/* 🌙 Botón de login con efecto */
+.login-box .btn-primary,
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    font-size: 16px;
+    padding: 12px;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.login-box .btn-primary:hover,
+.btn-primary:hover {
+    background-color: var(--button-hover);
+}
+
+/* 🌙 Mensajes de error */
+.alert {
+    animation: fadeIn 0.5s ease-in-out;
+    font-size: 14px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* 🌙 Animación FadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
