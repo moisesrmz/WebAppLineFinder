@@ -147,22 +147,33 @@ function guardarCambios() {
     let table = document.getElementById("excelTable");
     let tbody = table.getElementsByTagName("tbody")[0];
     let headerRow = document.getElementById("tableHeader").getElementsByTagName("th");
+
+    if (tbody.rows.length === 0) {
+        alert("⚠️ No hay datos en la hoja seleccionada. Carga los datos antes de guardar.");
+        return;  // ❌ No envía datos vacíos al servidor
+    }
+
     let datos = [];
 
     // 🟢 Capturar encabezados
     let encabezados = [];
-    for (let i = 1; i < headerRow.length; i++) { // 👈 Saltamos la primera columna de numeración
+    for (let i = 1; i < headerRow.length; i++) { // Saltamos la numeración
         encabezados.push(headerRow[i].innerText);
     }
-    datos.push(encabezados);  // ✅ Agregamos encabezados como la primera fila de datos
+    datos.push(encabezados);
 
-    // 🟢 Capturar los datos de la tabla (sin la columna de numeración)
+    // 🟢 Capturar los datos de la tabla
     for (let row of tbody.rows) {
         let rowData = [];
-        for (let i = 1; i < row.cells.length; i++) { // 👈 Saltamos la numeración de filas
+        for (let i = 1; i < row.cells.length; i++) { // Saltamos la numeración
             rowData.push(row.cells[i].firstChild.value);
         }
         datos.push(rowData);
+    }
+
+    if (datos.length <= 1) {
+        alert("⚠️ No hay datos para guardar.");
+        return;
     }
 
     fetch("/editor/guardar_cambios", {
@@ -171,5 +182,6 @@ function guardarCambios() {
         body: JSON.stringify({ hoja: hoja, datos: datos })
     })
     .then(response => response.json())
-    .then(data => alert(data.mensaje));
+    .then(data => alert(data.mensaje))
+    .catch(error => console.error("❌ Error al guardar:", error));
 }

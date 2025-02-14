@@ -25,5 +25,9 @@ def cargar_hoja():
 def guardar_cambios():
     hoja = request.json.get("hoja")
     datos = request.json.get("datos")
+
+    if not datos or len(datos) <= 1:  # Evita guardar si solo hay encabezados
+        return jsonify({"mensaje": "⚠️ No hay datos válidos para guardar."})
+
     resultado = guardar_cambios_excel(hoja, datos)
     return jsonify({"mensaje": resultado})
