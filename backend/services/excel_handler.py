@@ -70,6 +70,13 @@ def buscar_numero_parte(numeros_parte):
                 for resultado in resultados_ordenados:
                     mensaje += f"<br>{resultado}<br>"
                 mensaje += "</div>"
+            else:
+                # Nuevo mensaje si no hay testers válidos en Hoja2
+                mensaje += (
+                    "<div class='resultado'><h3>Resultados para el número de parte '{0}':</h3>"
+                    "<p><strong>No se encontró tester con módulos:</strong> {1}</p></div>"
+                ).format(numero_parte, ', '.join(valores_buscados))
+
 
     return mensaje, filas_resaltadas
 
