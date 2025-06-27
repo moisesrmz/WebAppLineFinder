@@ -22,7 +22,7 @@ def buscar_numero_parte(numeros_parte):
         fila_df1 = df1[df1.iloc[:, 0].astype(str).str.strip() == numero_parte]
 
         if fila_df1.empty:
-            mensaje += f"<div class='resultado'><h3>No se encontró el número de parte '{numero_parte}' en la base de datos.</h3></div>"
+            mensaje += f"<div class='resultado'><h3>Número de parte '{numero_parte}' no encontrado en la base de datos.</h3></div>"
         else:
             resultados_ordenados = []
 
