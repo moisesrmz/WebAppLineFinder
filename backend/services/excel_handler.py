@@ -28,7 +28,8 @@ def buscar_numero_parte(numeros_parte):
 
             for _, row in fila_df1.iterrows():
                 molex_pn = row[0]
-                valores_buscados = row[1:].dropna().tolist()
+                version = row[1]   # Valor de la columna B
+                valores_buscados = row[2:].dropna().tolist()
                 
                 # ✅ Contamos cuántas veces aparece cada valor en la búsqueda
                 valores_buscados_contador = {val: valores_buscados.count(val) for val in set(valores_buscados)}
@@ -65,17 +66,18 @@ def buscar_numero_parte(numeros_parte):
             if resultados_ordenados:
                 resultados_ordenados = list(set(resultados_ordenados))
                 resultados_ordenados.sort()
-                mensaje += "<div class='resultado'><h3>Resultados para el número de parte '{0}':</h3>".format(numero_parte)
+                # 👇 Usa descripcion en el título
+                mensaje += "<div class='resultado'><h3>Resultados para el número de parte '{0}' ({1}):</h3>".format(numero_parte, version)
                 mensaje += f"<p><strong>Housings:</strong> {', '.join(valores_buscados)}</p>"
                 for resultado in resultados_ordenados:
                     mensaje += f"<br>{resultado}<br>"
                 mensaje += "</div>"
             else:
-                # Nuevo mensaje si no hay testers válidos en Hoja2
                 mensaje += (
-                    "<div class='resultado'><h3>Resultados para el número de parte '{0}':</h3>"
-                    "<p><strong>No se encontró tester con módulos:</strong> {1}</p></div>"
-                ).format(numero_parte, ', '.join(valores_buscados))
+                    "<div class='resultado'><h3>Resultados para el número de parte '{0}' ({1}):</h3>"
+                    "<p><strong>No se encontró tester con módulos:</strong> {2}</p></div>"
+                ).format(numero_parte, version, ', '.join(valores_buscados))
+
 
 
     return mensaje, filas_resaltadas
