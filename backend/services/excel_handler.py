@@ -5,7 +5,7 @@ def buscar_numero_parte(numeros_parte):
     mensaje = ""
     filas_resaltadas = []
 
-    # Cargar archivo Excel
+
     try:
         df1 = pd.read_excel(config.DATA_FILE, sheet_name="Hoja1", engine="openpyxl")
         df2 = pd.read_excel(config.DATA_FILE, sheet_name="Hoja2", engine="openpyxl")
