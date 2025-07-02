@@ -59,7 +59,7 @@ def buscar_numero_parte(numeros_parte):
                         if encontrado:
                             resultados_ordenados.append(f"{molex_pn} - {tester}: <span style='color:green; font-weight:bold;'>Confirmado</span>")
                         else:
-                            resultados_ordenados.append(f"{molex_pn} - {tester}: <span style='color:red; font-weight:bold;'>Confirmar con Ingeniería de Pruebas en piso</span>")
+                            resultados_ordenados.append(f"{molex_pn} - {tester}: <span style='color:red; font-weight:bold;'>Validar con Ingeniería de Pruebas en piso</span>")
                     else:
                         resultados_ordenados.append(f"{molex_pn} - {tester}: Tester no habilitado")
 
