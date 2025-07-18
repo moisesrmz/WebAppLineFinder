@@ -1,5 +1,5 @@
 import pandas as pd
-import backend.config as config  # ✅ Importación correcta
+import backend.config as config 
 
 def buscar_numero_parte(numeros_parte):
     mensaje = ""
@@ -66,7 +66,7 @@ def buscar_numero_parte(numeros_parte):
             if resultados_ordenados:
                 resultados_ordenados = list(set(resultados_ordenados))
                 resultados_ordenados.sort()
-                # 👇 Usa descripcion en el título
+                # Usamos la variable 'version' como descripción en el título del resultado para mayor claridad
                 mensaje += "<div class='resultado'><h3>Resultados para el número de parte '{0}' ({1}):</h3>".format(numero_parte, version)
                 mensaje += f"<p><strong>Módulos:</strong> {', '.join(valores_buscados)}</p>"
                 for resultado in resultados_ordenados:
