@@ -68,7 +68,7 @@ def buscar_numero_parte(numeros_parte):
                 resultados_ordenados.sort()
                 # 👇 Usa descripcion en el título
                 mensaje += "<div class='resultado'><h3>Resultados para el número de parte '{0}' ({1}):</h3>".format(numero_parte, version)
-                mensaje += f"<p><strong>Housings:</strong> {', '.join(valores_buscados)}</p>"
+                mensaje += f"<p><strong>Módulos:</strong> {', '.join(valores_buscados)}</p>"
                 for resultado in resultados_ordenados:
                     mensaje += f"<br>{resultado}<br>"
                 mensaje += "</div>"
