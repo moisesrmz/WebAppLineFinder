@@ -4,7 +4,7 @@ import backend.config as config
 import os
 from datetime import datetime, timedelta
 
-views_bp = Blueprint("views", __name__)  # ✅ Nombre del Blueprint "views"
+views_bp = Blueprint("views", __name__)  # ✅ Nombre del Blueprint
 
 def init_routes(app):
     app.register_blueprint(views_bp)
