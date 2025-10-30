@@ -82,6 +82,42 @@ def buscar_numero_parte(numeros_parte):
 
     return mensaje, filas_resaltadas
 
+def buscar_modulo(modulo):
+    mensaje = ""
+    filas_resaltadas = []
+
+    try:
+        df = pd.read_excel(config.DATA_FILE, sheet_name="Hoja2", engine="openpyxl")
+    except Exception as e:
+        return f"Error al leer el archivo Excel: {str(e)}", []
+
+    # Normalizar datos a minúsculas y quitar espacios
+    df = df.applymap(lambda x: str(x).strip().lower() if pd.notna(x) else "")
+    modulo = modulo.lower().strip()
+
+    # Buscar coincidencias en cualquier celda a partir de la columna 3
+    coincidencias = []
+    for _, fila in df.iterrows():
+        valores = fila[2:].tolist()
+        if any(modulo in str(v) for v in valores):
+            coincidencias.append({
+                "FA": fila.iloc[0],
+                "EOL": fila.iloc[1]
+            })
+
+    # Construir mensaje HTML
+    if coincidencias:
+        mensaje += f"<div class='resultado'><h3>Resultados para el módulo '{modulo}':</h3>"
+        mensaje += "<table border='1'><tr><th>FA</th><th>EOL</th></tr>"
+        for c in coincidencias:
+            mensaje += f"<tr><td>{c['FA']}</td><td>{c['EOL']}</td></tr>"
+        mensaje += "</table></div>"
+        filas_resaltadas = coincidencias
+    else:
+        mensaje += f"<div class='resultado'><h3>No se encontraron líneas con el módulo '{modulo}'.</h3></div>"
+
+    return mensaje, filas_resaltadas
+
 # Leer datos de una hoja del Excel
 def leer_hoja(hoja):
     try:
