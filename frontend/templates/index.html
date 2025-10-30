@@ -7,71 +7,155 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
+
+    <style>
+        /* 🌐 Mejora visual moderna */
+        body {
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #004aad;
+            margin-bottom: 30px;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 280px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin: 0 10px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            background-color: #004aad;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background-color: #0066ff;
+        }
+
+        /* Tabla de resultados */
+        .results table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .results th {
+            background-color: #004aad;
+            color: white;
+            padding: 10px;
+            border-bottom: 2px solid #00357d;
+        }
+
+        .results td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .results tr:hover {
+            background-color: #f1f5ff;
+        }
+
+        .results h3 {
+            color: #004aad;
+            text-align: center;
+        }
+
+        .center-button {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 6px;
+            background-color: #004aad;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background-color: #0066ff;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        footer a {
+            color: #004aad;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Búsqueda de línea de FA por NP o Módulo.</h1>
+        <h1>Búsqueda de Línea FA / Módulo</h1>
 
-        <!-- Formulario principal -->
+        <!-- 🔍 Formulario -->
         <form method="post" action="{{ url_for('views.index') }}">
             <label for="numero_parte">Número de Parte o Módulo:</label>
             <input type="text" id="numero_parte" name="numero_parte" required autofocus>
             <button type="submit">Buscar</button>
         </form>
 
-        <!-- Resultados principales -->
+        <!-- 🧾 Resultados (solo el mensaje HTML del backend) -->
         <div class="results">
             {{ mensaje|safe }}
         </div>
-
-        <!-- Tabla de resultados de Hoja2 (solo si filas_resaltadas tiene índices de Pandas) -->
-        {% if filas_resaltadas %}
-            {% if filas_resaltadas[0] is not mapping %}
-                <h2>Resultados en Hoja2:</h2>
-                <table border="1">
-                    <tr>
-                        <th>Line</th>
-                        {% for col in filas_resaltadas[0].index[1:] %}
-                        <th>{{ col }}</th>
-                        {% endfor %}
-                    </tr>
-                    {% for fila in filas_resaltadas %}
-                    <tr>
-                        <td>{{ fila['Line'] }}</td>
-                        {% for col in fila.index[1:] %}
-                        <td>{{ fila[col]|safe }}</td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </table>
-            {% else %}
-                <!-- Si filas_resaltadas es una lista de diccionarios (búsqueda de módulos) -->
-                {% if filas_resaltadas|length > 0 %}
-                    <h2>Coincidencias encontradas:</h2>
-                    <table border="1">
-                        <tr>
-                            {% for key in filas_resaltadas[0].keys() %}
-                                <th>{{ key|upper }}</th>
-                            {% endfor %}
-                        </tr>
-                        {% for fila in filas_resaltadas %}
-                            <tr>
-                                {% for value in fila.values() %}
-                                    <td>{{ value }}</td>
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% endif %}
-            {% endif %}
-        {% endif %}
     </div>
 
-    <!-- Botón de administración -->
+    <!-- 🔐 Botón de Administración -->
     <div class="center-button">
         <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Administración</a>
-    </div>  
+    </div>
 
+    <!-- ⚙️ Footer -->
     <footer>
         <p>&copy; 2025 Developed by NTW Test Department.</p>
         <p>| <a href="mailto:moises.ramirez1@molex.com">Contacto</a> |</p>
