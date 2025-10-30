@@ -10,43 +10,72 @@
 </head>
 <body>
     <div class="container">
-        <h1>Búsqueda de línea de FA por NP.</h1>
+        <h1>Búsqueda de línea de FA por NP o Módulo.</h1>
+
+        <!-- Formulario principal -->
         <form method="post" action="{{ url_for('views.index') }}">
-            <label for="numero_parte">Número de Parte / Módulo:</label>
+            <label for="numero_parte">Número de Parte o Módulo:</label>
             <input type="text" id="numero_parte" name="numero_parte" required autofocus>
             <button type="submit">Buscar</button>
         </form>
+
+        <!-- Resultados principales -->
         <div class="results">
             {{ mensaje|safe }}
         </div>
+
+        <!-- Tabla de resultados de Hoja2 (solo si filas_resaltadas tiene índices de Pandas) -->
         {% if filas_resaltadas %}
-        <h2>Resultados en Hoja2:</h2>
-        <table border="1">
-            <tr>
-                <th>Line</th>
-                {% for col in filas_resaltadas[0].index[1:] %}
-                <th>{{ col }}</th>
-                {% endfor %}
-            </tr>
-            {% for fila in filas_resaltadas %}
-            <tr>
-                <td>{{ fila['Line'] }}</td>
-                {% for col in fila.index[1:] %}
-                <td>{{ fila[col]|safe }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
+            {% if filas_resaltadas[0] is not mapping %}
+                <h2>Resultados en Hoja2:</h2>
+                <table border="1">
+                    <tr>
+                        <th>Line</th>
+                        {% for col in filas_resaltadas[0].index[1:] %}
+                        <th>{{ col }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for fila in filas_resaltadas %}
+                    <tr>
+                        <td>{{ fila['Line'] }}</td>
+                        {% for col in fila.index[1:] %}
+                        <td>{{ fila[col]|safe }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <!-- Si filas_resaltadas es una lista de diccionarios (búsqueda de módulos) -->
+                {% if filas_resaltadas|length > 0 %}
+                    <h2>Coincidencias encontradas:</h2>
+                    <table border="1">
+                        <tr>
+                            {% for key in filas_resaltadas[0].keys() %}
+                                <th>{{ key|upper }}</th>
+                            {% endfor %}
+                        </tr>
+                        {% for fila in filas_resaltadas %}
+                            <tr>
+                                {% for value in fila.values() %}
+                                    <td>{{ value }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+            {% endif %}
         {% endif %}
     </div>
+
+    <!-- Botón de administración -->
     <div class="center-button">
         <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Administración</a>
     </div>  
+
     <footer>
         <p>&copy; 2025 Developed by NTW Test Department.</p>
-        <p>|  <a href="mailto:moises.ramirez1@molex.com">Contacto</a> |</p>
+        <p>| <a href="mailto:moises.ramirez1@molex.com">Contacto</a> |</p>
         <p>Última actualización: {{ ultima_actualizacion }}</p>
     </footer>
 </body>
 </html>
-
