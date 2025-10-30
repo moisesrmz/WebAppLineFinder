@@ -88,6 +88,7 @@ def buscar_modulo(modulo):
 
     try:
         df = pd.read_excel(config.DATA_FILE, sheet_name="Hoja2", engine="openpyxl")
+<<<<<<< HEAD
         df.fillna("", inplace=True)  # ✅ Evita errores por celdas vacías
     except Exception as e:
         print("Error al leer Excel:", e)
@@ -96,6 +97,16 @@ def buscar_modulo(modulo):
     df = df.applymap(lambda x: str(x).strip().lower() if pd.notna(x) else "")
     modulo = modulo.lower().strip()
 
+=======
+    except Exception as e:
+        return f"Error al leer el archivo Excel: {str(e)}", []
+
+    # Normalizar datos a minúsculas y quitar espacios
+    df = df.applymap(lambda x: str(x).strip().lower() if pd.notna(x) else "")
+    modulo = modulo.lower().strip()
+
+    # Buscar coincidencias en cualquier celda a partir de la columna 3
+>>>>>>> ce80f4209f8df0e319c578cca2c95340ef00742b
     coincidencias = []
     for _, fila in df.iterrows():
         valores = fila[2:].tolist()
@@ -105,6 +116,10 @@ def buscar_modulo(modulo):
                 "EOL": fila.iloc[1]
             })
 
+<<<<<<< HEAD
+=======
+    # Construir mensaje HTML
+>>>>>>> ce80f4209f8df0e319c578cca2c95340ef00742b
     if coincidencias:
         mensaje += f"<div class='resultado'><h3>Resultados para el módulo '{modulo}':</h3>"
         mensaje += "<table border='1'><tr><th>FA</th><th>EOL</th></tr>"
