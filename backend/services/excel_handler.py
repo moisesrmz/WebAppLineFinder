@@ -81,7 +81,6 @@ def buscar_numero_parte(numeros_parte):
 
 
     return mensaje, filas_resaltadas
-
 def buscar_modulo(modulo):
     mensaje = ""
     filas_resaltadas = []
@@ -102,18 +101,21 @@ def buscar_modulo(modulo):
     coincidencias = []
     for _, fila in df.iterrows():
         valores = [str(v) for v in fila[2:].tolist()]
-        if any(modulo in v for v in valores):
+        cantidad = sum(1 for v in valores if modulo in v)
+
+        if cantidad > 0:
             coincidencias.append({
                 "FA": fila.iloc[0],
-                "EOL": fila.iloc[1]
+                "EOL": fila.iloc[1],
+                "Cantidad": f"{cantidad}x"
             })
 
     # ✅ Generar mensaje HTML
     if coincidencias:
         mensaje += f"<div class='resultado'><h3>Resultados para el módulo '{modulo}':</h3>"
-        mensaje += "<table border='1'><tr><th>FA</th><th>EOL</th></tr>"
+        mensaje += "<table border='1'><tr><th>FA</th><th>EOL</th><th>Cantidad</th></tr>"
         for c in coincidencias:
-            mensaje += f"<tr><td>{c['FA']}</td><td>{c['EOL']}</td></tr>"
+            mensaje += f"<tr><td>{c['FA']}</td><td>{c['EOL']}</td><td>{c['Cantidad']}</td></tr>"
         mensaje += "</table></div>"
         filas_resaltadas = coincidencias
     else:
