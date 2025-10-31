@@ -87,39 +87,44 @@ def buscar_modulo(modulo):
     filas_resaltadas = []
 
     try:
-        # ✅ Leer la hoja 2
+        # Leer Hoja2
         df = pd.read_excel(config.DATA_FILE, sheet_name="Hoja2", engine="openpyxl", dtype=str)
-        df.fillna("", inplace=True)  # Evita errores por NaN
+        df.fillna("", inplace=True)
     except Exception as e:
         print(f"❌ Error al leer Hoja2: {e}")
         return f"Error al leer el archivo Excel: {str(e)}", []
 
-    # ✅ Convertir todo a minúsculas y quitar espacios
+    # Convertir todo a minúsculas y quitar espacios
     df = df.applymap(lambda x: str(x).strip().lower() if pd.notna(x) else "")
     modulo = str(modulo).strip().lower()
 
-    # ✅ Buscar coincidencias (en cualquier columna a partir de la 3)
+    # Detectar automáticamente nombres de columnas FA/EOL (primeras dos columnas)
+    col_fa = df.columns[0]
+    col_eol = df.columns[1]
+
     coincidencias = []
     for _, fila in df.iterrows():
         valores = [str(v) for v in fila[2:].tolist()]
         if any(modulo in v for v in valores):
             coincidencias.append({
-                "FA": fila.iloc[0],
-                "EOL": fila.iloc[1]
+                "fa": fila.iloc[0],
+                "eol": fila.iloc[1]
             })
 
-    # ✅ Generar mensaje HTML
+    # Generar HTML
     if coincidencias:
         mensaje += f"<div class='resultado'><h3>Resultados para el módulo '{modulo}':</h3>"
+        mensaje += f"<p><strong>Cantidad de coincidencias:</strong> {len(coincidencias)}</p>"
         mensaje += "<table border='1'><tr><th>FA</th><th>EOL</th></tr>"
         for c in coincidencias:
-            mensaje += f"<tr><td>{c['FA']}</td><td>{c['EOL']}</td></tr>"
+            # ✅ Usa claves seguras (minúsculas)
+            mensaje += f"<tr><td>{c.get('fa','-')}</td><td>{c.get('eol','-')}</td></tr>"
         mensaje += "</table></div>"
         filas_resaltadas = coincidencias
     else:
         mensaje += f"<div class='resultado'><h3>No se encontraron líneas con el módulo '{modulo}'.</h3></div>"
 
-    print(f"🔎 Buscar módulo: '{modulo}', coincidencias encontradas: {len(coincidencias)}")
+    print(f"🔎 Buscar módulo: '{modulo}', coincidencias: {len(coincidencias)}")
     return mensaje, filas_resaltadas
 
 # Leer datos de una hoja del Excel
