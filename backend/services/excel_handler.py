@@ -104,8 +104,8 @@ def buscar_modulo(modulo):
         valores = [str(v) for v in fila[2:].tolist()]
         if any(modulo in v for v in valores):
             coincidencias.append({
-                "Línea": fila.iloc[0],
-                "Equipo": fila.iloc[1]
+                "FA": fila.iloc[0],
+                "EOL": fila.iloc[1]
             })
 
     # ✅ Generar mensaje HTML
