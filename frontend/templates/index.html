@@ -9,7 +9,6 @@
     <script src="{{ url_for('static', filename='js/scripts.js') }}" defer></script>
 
     <style>
-        /* 🌐 Mejora visual moderna */
         body {
             font-family: "Segoe UI", Roboto, Arial, sans-serif;
             background-color: #f7f9fc;
@@ -136,21 +135,16 @@
 <body>
     <div class="container">
         <h1>Búsqueda de Línea FA / Módulo</h1>
-
-        <!-- 🔍 Formulario -->
         <form method="post" action="{{ url_for('views.index') }}">
             <label for="numero_parte">Número de Parte o Módulo:</label>
             <input type="text" id="numero_parte" name="numero_parte" required autofocus>
             <button type="submit">Buscar</button>
         </form>
-
-        <!-- 🧾 Resultados (solo el mensaje HTML del backend) -->
         <div class="results">
             {{ mensaje|safe }}
         </div>
     </div>
 
-    <!-- 🔐 Botón de Administración -->
     <div class="center-button">
         <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Administración</a>
     </div>
