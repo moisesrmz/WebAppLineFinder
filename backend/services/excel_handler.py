@@ -147,3 +147,79 @@ def guardar_cambios_excel(hoja, datos):
         return "Guardado correctamente con encabezados"
     except Exception as e:
         return f"Error: {str(e)}"
+# ============================================================
+# 🚨 ALERTAS DE CALIDAD
+# ============================================================
+
+import os
+from openpyxl import Workbook, load_workbook
+
+ALERTAS_FILE = "backend/data/AlertasCalidad.xlsx"
+ALERTAS_SHEET = "Alertas"
+
+
+def _inicializar_alertas():
+    """
+    Crea el archivo y hoja de alertas si no existen.
+    """
+    if not os.path.exists(ALERTAS_FILE):
+        wb = Workbook()
+        ws = wb.active
+        ws.title = ALERTAS_SHEET
+        ws.append(["ID", "Numero_Parte", "Descripcion", "Fecha"])
+        wb.save(ALERTAS_FILE)
+
+
+def leer_alertas():
+    """
+    Lee todas las alertas desde el Excel.
+    Devuelve lista de diccionarios.
+    """
+    _inicializar_alertas()
+
+    wb = load_workbook(ALERTAS_FILE)
+    ws = wb[ALERTAS_SHEET]
+
+    alertas = []
+
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        if row[0] is not None:
+            alertas.append({
+                "id": row[0],
+                "numero_parte": str(row[1]) if row[1] else "",
+                "descripcion": str(row[2]) if row[2] else "",
+                "fecha": str(row[3]) if row[3] else ""
+            })
+
+    return alertas
+
+
+def guardar_alertas(data):
+    """
+    Sobrescribe completamente el archivo con las alertas recibidas.
+    Regenera IDs automáticamente.
+    """
+
+    # Validación fuerte backend
+    for alerta in data:
+        if not alerta["numero_parte"].isdigit() or len(alerta["numero_parte"]) != 10:
+            raise ValueError("Número de parte inválido. Debe tener 10 dígitos.")
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = ALERTAS_SHEET
+
+    ws.append(["ID", "Numero_Parte", "Descripcion", "Fecha"])
+
+    for i, alerta in enumerate(data, start=1):
+        ws.append([
+            i,
+            alerta["numero_parte"],
+            alerta["descripcion"],
+            alerta["fecha"]
+        ])
+
+    wb.save(ALERTAS_FILE)
+
+    return True
+

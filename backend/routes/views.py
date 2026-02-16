@@ -3,6 +3,8 @@ from backend.services.excel_handler import buscar_numero_parte, buscar_modulo
 import backend.config as config
 import os
 from datetime import datetime, timedelta
+from flask import Blueprint, render_template, request, send_file, session, redirect, url_for, jsonify
+from backend.services.excel_handler import buscar_numero_parte, buscar_modulo, leer_alertas, guardar_alertas
 
 views_bp = Blueprint("views", __name__)
 
@@ -55,3 +57,37 @@ def alertas_calidad():
         "alertas_calidad.html",
         user=session.get("alert_user")
     )
+
+
+# ============================================================
+# 🚨 API ALERTAS DE CALIDAD
+# ============================================================
+
+@views_bp.route("/api/alertas", methods=["GET"])
+def api_leer_alertas():
+
+    if "alert_user" not in session:
+        return jsonify({"error": "No autorizado"}), 403
+
+    alertas = leer_alertas()
+    return jsonify(alertas)
+
+
+@views_bp.route("/api/alertas", methods=["POST"])
+def api_guardar_alertas():
+
+    if "alert_user" not in session:
+        return jsonify({"error": "No autorizado"}), 403
+
+    data = request.get_json()
+
+    if not isinstance(data, list):
+        return jsonify({"error": "Formato inválido"}), 400
+
+    try:
+        guardar_alertas(data)
+        return jsonify({"success": True})
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": "Error interno al guardar"}), 500

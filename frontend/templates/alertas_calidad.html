@@ -1,9 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alertas de Calidad</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #f7f9fc;
+            padding: 40px;
+        }
+
+        h2 {
+            color: #004aad;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #004aad;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f1f5ff;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #004aad;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0066ff;
+        }
+
+        .delete-btn {
+            background: #cc0000;
+        }
+
+        .delete-btn:hover {
+            background: #ff0000;
+        }
+    </style>
+</head>
+<body>
+
 <h2>🚨 Alertas de Calidad</h2>
 
-{% if user %}
-    <p>Bienvenido {{ user.capitalize() }} 👋</p>
-{% endif %}
+<p>Bienvenido {{ user.capitalize() }} 👋</p>
 
-<a href="{{ url_for('auth.alert_logout') }}">Cerrar sesión</a>
+<button onclick="agregarFila()">+ Nueva Alerta</button>
+
+<table id="tabla">
+    <thead>
+        <tr>
+            <th>Número de Parte</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<button onclick="guardar()">💾 Guardar Cambios</button>
+
+<script>
+async function cargar() {
+    const res = await fetch("/api/alertas");
+    const data = await res.json();
+    const tbody = document.querySelector("#tabla tbody");
+    tbody.innerHTML = "";
+
+    data.forEach(a => {
+        agregarFila(a.numero_parte, a.descripcion, a.fecha);
+    });
+}
+
+function agregarFila(np="", desc="", fecha="") {
+    const tbody = document.querySelector("#tabla tbody");
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td><input type="text" maxlength="10" value="${np}"></td>
+        <td><input type="text" value="${desc}"></td>
+        <td><input type="date" value="${fecha || ""}"></td>
+        <td><button class="delete-btn" onclick="this.closest('tr').remove()">🗑</button></td>
+    `;
+
+    tbody.appendChild(row);
+}
+
+async function guardar() {
+    const rows = document.querySelectorAll("#tabla tbody tr");
+    const data = [];
+
+    for (let row of rows) {
+        const inputs = row.querySelectorAll("input");
+        const numero_parte = inputs[0].value.trim();
+        const descripcion = inputs[1].value.trim();
+        const fecha = inputs[2].value;
+
+        if (!/^\d{10}$/.test(numero_parte)) {
+            alert("Número de parte inválido. Debe tener 10 dígitos.");
+            return;
+        }
+
+        data.push({ numero_parte, descripcion, fecha });
+    }
+
+    await fetch("/api/alertas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    });
+
+    alert("Guardado correctamente ✅");
+}
+
+cargar();
+</script>
+
 <br><br>
-<a href="{{ url_for('views.index') }}">⬅ Volver</a>
+<a href="{{ url_for('auth.alert_logout') }}">Cerrar sesión</a> |
+<a href="{{ url_for('views.index') }}">Volver</a>
+
+</body>
+</html>
