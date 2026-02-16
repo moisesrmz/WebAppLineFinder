@@ -37,3 +37,7 @@ def index():
 def descargar_excel():
     ruta_archivo = os.path.join(os.getcwd(), "backend/data/AutomatedLines.xlsx")
     return send_file(ruta_archivo, as_attachment=True)
+
+@views_bp.route("/alertas-calidad")
+def alertas_calidad():
+    return render_template("alertas_calidad.html")
