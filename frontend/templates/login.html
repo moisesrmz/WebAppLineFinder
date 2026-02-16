@@ -1,33 +1,105 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.login-box {
+    width: 380px;
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.login-box h2 {
+    text-align: center;
+    color: #004aad;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background-color: #004aad;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0066ff;
+}
+
+.alert {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+</style>
+
 <div class="login-container">
     <div class="login-box">
-        <h2 class="text-center">🔑 Iniciar Sesión</h2>
+        <h2>🔐 Acceso a Alertas de Calidad</h2>
 
-        <!-- 🟢 Mostrar mensajes de error o éxito -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="alert-container">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <form method="post" action="{{ url_for('auth.alert_login') }}" class="mt-4">
+        <form method="post" action="{{ url_for('auth.alert_login') }}">
             <div class="form-group">
-                <label for="username" class="form-label">👤 Usuario</label>
-                <input type="text" id="username" name="username" class="form-control" required autofocus>
+                <label>Usuario</label>
+                <input type="text" name="username" class="form-control" required autofocus>
             </div>
-            <div class="form-group mt-3">
-                <label for="password" class="form-label">🔒 Contraseña</label>
-                <input type="password" id="password" name="password" class="form-control" required>
-                <br></br>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" name="password" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-primary">🚀 Ingresar</button>
+
+            <button type="submit" class="btn-primary">Ingresar</button>
         </form>
+
+        <br>
+        <div style="text-align:center;">
+            <a href="{{ url_for('views.index') }}">⬅ Volver</a>
+        </div>
     </div>
 </div>
 {% endblock %}

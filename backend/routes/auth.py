@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -17,9 +17,10 @@ def alert_login():
 
         if username in USERS and USERS[username] == password:
             session["alert_user"] = username
+            flash(f"Bienvenido {username.capitalize()} 👋", "success")
             return redirect(url_for("views.alertas_calidad"))
         else:
-            return render_template("login.html", error="Usuario o contraseña incorrectos")
+            flash("Usuario o contraseña incorrectos ❌", "danger")
 
     return render_template("login.html")
 
