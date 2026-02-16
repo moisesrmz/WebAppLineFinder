@@ -17,7 +17,7 @@ def alert_login():
 
         if username in USERS and USERS[username] == password:
             session["alert_user"] = username
-            flash(f"Bienvenido {username.capitalize()} 👋", "success")
+            #flash(f"Bienvenido {username.capitalize()} 👋", "success")
             return redirect(url_for("views.alertas_calidad"))
         else:
             flash("Usuario o contraseña incorrectos ❌", "danger")
