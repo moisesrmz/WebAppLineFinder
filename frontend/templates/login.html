@@ -16,7 +16,7 @@
             {% endif %}
         {% endwith %}
 
-        <form method="post" action="{{ url_for('auth.login') }}" class="mt-4">
+        <form method="post" action="{{ url_for('auth.alert_login') }}" class="mt-4">
             <div class="form-group">
                 <label for="username" class="form-label">👤 Usuario</label>
                 <input type="text" id="username" name="username" class="form-control" required autofocus>
