@@ -95,10 +95,10 @@
             text-align: center;
         }
 
-        .center-button {
-            text-align: center;
-            margin: 20px 0;
+        .center-button + .center-button {
+            margin-top: 10px;
         }
+
 
         .btn {
             display: inline-block;
@@ -151,7 +151,9 @@
     <!-- 🔘 Botones -->
     <div class="center-button">
         <a href="{{ url_for('auth.login') }}" class="btn">Administración</a>
-        <br>
+    </div>
+
+    <div class="center-button">
         <a href="{{ url_for('views.alertas_calidad') }}" class="btn">Alertas de Calidad</a>
     </div>
 
