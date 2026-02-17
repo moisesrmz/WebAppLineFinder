@@ -1,22 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
 
 <style>
 .container-alertas {
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 40px auto;
     background: white;
     padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 h1 {
     color: #004aad;
+    margin-bottom: 10px;
 }
+
+/* ===== DASHBOARD ===== */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 20px 0 30px 0;
+}
+
+.card {
+    padding: 20px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    font-size: 18px;
+}
+
+.card.red { background: #d9534f; }
+.card.yellow { background: #f0ad4e; }
+.card.green { background: #5cb85c; }
+.card.blue { background: #004aad; }
+
+/* ===== FILTRO ===== */
+
+.filtro-container {
+    margin-bottom: 15px;
+}
+
+.filtro-container input {
+    width: 300px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* ===== TABLA ===== */
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
 }
 
 th {
@@ -31,10 +71,18 @@ td {
 }
 
 tr:hover {
-    background: #f1f5ff;
+    background: #f4f8ff;
 }
 
-input, select {
+tr.vencida {
+    background-color: #fde2e2;
+}
+
+tr.proxima {
+    background-color: #fff4d6;
+}
+
+input {
     width: 100%;
     padding: 6px;
     border-radius: 5px;
@@ -55,7 +103,7 @@ button:hover {
 }
 
 .delete-btn {
-    background: #cc0000;
+    background: #c9302c;
 }
 
 .delete-btn:hover {
@@ -65,18 +113,32 @@ button:hover {
 
 <div class="container-alertas">
 
-<h1>🚨 Alertas de Calidad</h1>
+<h1>🚨 Panel de Alertas de Calidad</h1>
 <p>Bienvenido {{ user.capitalize() }}</p>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+    <div class="card red">🔴 Vencidas: <span id="countVencidas">0</span></div>
+    <div class="card yellow">🟡 Próximas: <span id="countProximas">0</span></div>
+    <div class="card green">🟢 Activas: <span id="countActivas">0</span></div>
+    <div class="card blue">📊 Total: <span id="countTotal">0</span></div>
+</div>
+
+<!-- FILTRO -->
+<div class="filtro-container">
+    🔍 Buscar NP o Área:
+    <input type="text" id="filtro" onkeyup="filtrar()">
+</div>
 
 <button onclick="agregarFila()">+ Nueva Alerta</button>
 
 <table id="tabla">
     <thead>
         <tr>
-            <th>Numero de Parte o Área</th>
-            <th>Numero de Alerta</th>
+            <th>Numero Parte / Área</th>
+            <th>Numero Alerta</th>
             <th>Descripción</th>
-            <th>Fecha de Generación</th>
+            <th>Fecha Generación</th>
             <th>Vigente Hasta</th>
             <th>Eliminar</th>
         </tr>
@@ -90,6 +152,46 @@ button:hover {
 </div>
 
 <script>
+
+function evaluarVencimiento(fecha) {
+    if (!fecha) return "activa";
+
+    const hoy = new Date();
+    const vencimiento = new Date(fecha);
+    const diffDias = (vencimiento - hoy) / (1000 * 60 * 60 * 24);
+
+    if (diffDias < 0) return "vencida";
+    if (diffDias <= 7) return "proxima";
+    return "activa";
+}
+
+function actualizarDashboard() {
+    let vencidas = 0;
+    let proximas = 0;
+    let activas = 0;
+
+    document.querySelectorAll("#tabla tbody tr").forEach(row => {
+        if (row.classList.contains("vencida")) vencidas++;
+        else if (row.classList.contains("proxima")) proximas++;
+        else activas++;
+    });
+
+    document.getElementById("countVencidas").innerText = vencidas;
+    document.getElementById("countProximas").innerText = proximas;
+    document.getElementById("countActivas").innerText = activas;
+    document.getElementById("countTotal").innerText =
+        vencidas + proximas + activas;
+}
+
+function aplicarColores(row, fecha) {
+    row.classList.remove("vencida", "proxima");
+
+    const estado = evaluarVencimiento(fecha);
+
+    if (estado === "vencida") row.classList.add("vencida");
+    if (estado === "proxima") row.classList.add("proxima");
+}
+
 async function cargar() {
     const res = await fetch("/api/alertas");
     const data = await res.json();
@@ -105,6 +207,8 @@ async function cargar() {
             a.vigente_hasta
         );
     });
+
+    actualizarDashboard();
 }
 
 function agregarFila(np="", alerta="", desc="", fecha_gen="", vigente="") {
@@ -112,27 +216,37 @@ function agregarFila(np="", alerta="", desc="", fecha_gen="", vigente="") {
     const row = document.createElement("tr");
 
     row.innerHTML = `
-        <td>
-            <input type="text" value="${np}">
-        </td>
-        <td>
-            <input type="text" value="${alerta}">
-        </td>
-        <td>
-            <input type="text" value="${desc}">
-        </td>
-        <td>
-            <input type="date" value="${fecha_gen || ""}">
-        </td>
-        <td>
-            <input type="date" value="${vigente || ""}">
-        </td>
-        <td>
-            <button class="delete-btn" onclick="this.closest('tr').remove()">🗑</button>
-        </td>
+        <td><input type="text" value="${np}"></td>
+        <td><input type="text" value="${alerta}"></td>
+        <td><input type="text" value="${desc}"></td>
+        <td><input type="date" value="${fecha_gen || ""}"></td>
+        <td><input type="date" value="${vigente || ""}" onchange="cambiarFecha(this)"></td>
+        <td><button class="delete-btn" onclick="eliminarFila(this)">🗑</button></td>
     `;
 
     tbody.appendChild(row);
+    aplicarColores(row, vigente);
+    actualizarDashboard();
+}
+
+function cambiarFecha(input) {
+    const row = input.closest("tr");
+    aplicarColores(row, input.value);
+    actualizarDashboard();
+}
+
+function eliminarFila(btn) {
+    btn.closest("tr").remove();
+    actualizarDashboard();
+}
+
+function filtrar() {
+    const filtro = document.getElementById("filtro").value.toLowerCase();
+
+    document.querySelectorAll("#tabla tbody tr").forEach(row => {
+        const texto = row.innerText.toLowerCase();
+        row.style.display = texto.includes(filtro) ? "" : "none";
+    });
 }
 
 async function guardar() {
@@ -153,7 +267,7 @@ async function guardar() {
             ["FA", "Corte", "Crimp"].includes(numero_parte_area);
 
         if (!valido) {
-            alert("El primer campo debe ser 10 dígitos o FA, Corte, Crimp.");
+            alert("Debe ser 10 dígitos o FA / Corte / Crimp.");
             return;
         }
 
@@ -174,12 +288,8 @@ async function guardar() {
 
     const result = await res.json();
 
-    if (result.error) {
-        alert(result.error);
-    } else {
-        alert("Guardado correctamente ✅");
-        cargar();
-    }
+    if (result.error) alert(result.error);
+    else alert("Guardado correctamente ✅");
 }
 
 cargar();
@@ -189,3 +299,4 @@ cargar();
 <a href="{{ url_for('auth.alert_logout') }}">Cerrar sesión</a> |
 <a href="{{ url_for('views.index') }}">Volver</a>
 
+{% endblock %}
