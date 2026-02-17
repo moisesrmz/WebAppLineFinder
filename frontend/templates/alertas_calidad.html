@@ -303,10 +303,21 @@ function filtrar() {
     const filtro = document.getElementById("filtro").value.toLowerCase();
 
     document.querySelectorAll("#tabla tbody tr").forEach(row => {
-        const texto = row.innerText.toLowerCase();
-        row.style.display = texto.includes(filtro) ? "" : "none";
+
+        const inputs = row.querySelectorAll("input");
+
+        const valores = Array.from(inputs)
+            .map(input => input.value.toLowerCase())
+            .join(" ");
+
+        if (valores.includes(filtro)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
     });
 }
+
 
 async function guardar() {
     const rows = document.querySelectorAll("#tabla tbody tr");
