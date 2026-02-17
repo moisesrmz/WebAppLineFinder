@@ -1,5 +1,7 @@
 import pandas as pd
 import backend.config as config 
+import shutil
+from datetime import datetime
 
 def buscar_numero_parte(numeros_parte):
     mensaje = ""
@@ -156,7 +158,9 @@ from openpyxl import Workbook, load_workbook
 
 #ALERTAS_FILE = "backend/data/AlertasCalidad.xlsx"
 ALERTAS_SHEET = "Alertas"
-ALERTAS_FILE = os.path.join(os.getenv("HOME", "."), "data", "AlertasCalidad.xlsx")
+#ALERTAS_FILE = os.path.join(os.getenv("HOME", "."), "data", "AlertasCalidad.xlsx")
+ALERTAS_FILE = "/home/data/AlertasCalidad.xlsx"
+
 ALERTAS_DIR = os.path.dirname(ALERTAS_FILE)
 
 if not os.path.exists(ALERTAS_DIR):
@@ -200,10 +204,6 @@ def leer_alertas():
             })
 
     return alertas
-
-
-import shutil
-from datetime import datetime
 
 def guardar_alertas(data):
 
