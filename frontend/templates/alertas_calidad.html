@@ -1,96 +1,95 @@
 {% extends "base.html" %}
-
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Alertas de Calidad</title>
-    <style>
-        body {
-            font-family: "Segoe UI", sans-serif;
-            background: #f7f9fc;
-            padding: 40px;
-        }
 
-        h2 {
-            color: #004aad;
-        }
+<style>
+.container-alertas {
+    max-width: 1200px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
+h1 {
+    color: #004aad;
+}
 
-        th {
-            background: #004aad;
-            color: white;
-            padding: 10px;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-        }
+th {
+    background: #004aad;
+    color: white;
+    padding: 10px;
+}
 
-        tr:hover {
-            background: #f1f5ff;
-        }
+td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
 
-        input[type="text"], input[type="date"] {
-            width: 100%;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-        }
+tr:hover {
+    background: #f1f5ff;
+}
 
-        button {
-            margin-top: 15px;
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
-            background: #004aad;
-            color: white;
-            cursor: pointer;
-        }
+input, select {
+    width: 100%;
+    padding: 6px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
 
-        button:hover {
-            background: #0066ff;
-        }
+button {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    background: #004aad;
+    color: white;
+    cursor: pointer;
+}
 
-        .delete-btn {
-            background: #cc0000;
-        }
+button:hover {
+    background: #0066ff;
+}
 
-        .delete-btn:hover {
-            background: #ff0000;
-        }
-    </style>
-</head>
-<body>
+.delete-btn {
+    background: #cc0000;
+}
 
-<h1>Alertas de Calidad</h1>
+.delete-btn:hover {
+    background: #ff0000;
+}
+</style>
 
-<p>Bienvenido {{ user.capitalize() }} </p>
+<div class="container-alertas">
+
+<h1>🚨 Alertas de Calidad</h1>
+<p>Bienvenido {{ user.capitalize() }}</p>
 
 <button onclick="agregarFila()">+ Nueva Alerta</button>
 
 <table id="tabla">
     <thead>
         <tr>
-            <th>Número de Parte</th>
+            <th>Numero de Parte o Área</th>
+            <th>Numero de Alerta</th>
             <th>Descripción</th>
-            <th>Fecha</th>
+            <th>Fecha de Generación</th>
+            <th>Vigente Hasta</th>
             <th>Eliminar</th>
         </tr>
     </thead>
     <tbody></tbody>
 </table>
 
+<br>
 <button onclick="guardar()">💾 Guardar Cambios</button>
+
+</div>
 
 <script>
 async function cargar() {
@@ -100,19 +99,39 @@ async function cargar() {
     tbody.innerHTML = "";
 
     data.forEach(a => {
-        agregarFila(a.numero_parte, a.descripcion, a.fecha);
+        agregarFila(
+            a.numero_parte_area,
+            a.numero_alerta,
+            a.descripcion,
+            a.fecha_generacion,
+            a.vigente_hasta
+        );
     });
 }
 
-function agregarFila(np="", desc="", fecha="") {
+function agregarFila(np="", alerta="", desc="", fecha_gen="", vigente="") {
     const tbody = document.querySelector("#tabla tbody");
     const row = document.createElement("tr");
 
     row.innerHTML = `
-        <td><input type="text" maxlength="10" value="${np}"></td>
-        <td><input type="text" value="${desc}"></td>
-        <td><input type="date" value="${fecha || ""}"></td>
-        <td><button class="delete-btn" onclick="this.closest('tr').remove()">🗑</button></td>
+        <td>
+            <input type="text" value="${np}">
+        </td>
+        <td>
+            <input type="text" value="${alerta}">
+        </td>
+        <td>
+            <input type="text" value="${desc}">
+        </td>
+        <td>
+            <input type="date" value="${fecha_gen || ""}">
+        </td>
+        <td>
+            <input type="date" value="${vigente || ""}">
+        </td>
+        <td>
+            <button class="delete-btn" onclick="this.closest('tr').remove()">🗑</button>
+        </td>
     `;
 
     tbody.appendChild(row);
@@ -124,33 +143,52 @@ async function guardar() {
 
     for (let row of rows) {
         const inputs = row.querySelectorAll("input");
-        const numero_parte = inputs[0].value.trim();
-        const descripcion = inputs[1].value.trim();
-        const fecha = inputs[2].value;
 
-        if (!/^\d{10}$/.test(numero_parte)) {
-            alert("Número de parte inválido. Debe tener 10 dígitos.");
+        const numero_parte_area = inputs[0].value.trim();
+        const numero_alerta = inputs[1].value.trim();
+        const descripcion = inputs[2].value.trim();
+        const fecha_generacion = inputs[3].value;
+        const vigente_hasta = inputs[4].value;
+
+        const valido =
+            (/^\d{10}$/.test(numero_parte_area)) ||
+            ["FA", "Corte", "Crimp"].includes(numero_parte_area);
+
+        if (!valido) {
+            alert("El primer campo debe ser 10 dígitos o FA, Corte, Crimp.");
             return;
         }
 
-        data.push({ numero_parte, descripcion, fecha });
+        data.push({
+            numero_parte_area,
+            numero_alerta,
+            descripcion,
+            fecha_generacion,
+            vigente_hasta
+        });
     }
 
-    await fetch("/api/alertas", {
+    const res = await fetch("/api/alertas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     });
 
-    alert("Guardado correctamente ✅");
+    const result = await res.json();
+
+    if (result.error) {
+        alert(result.error);
+    } else {
+        alert("Guardado correctamente ✅");
+        cargar();
+    }
 }
 
 cargar();
 </script>
 
-<br><br>
+<br>
 <a href="{{ url_for('auth.alert_logout') }}">Cerrar sesión</a> |
 <a href="{{ url_for('views.index') }}">Volver</a>
 
-</body>
-</html>
+{% endblock %}

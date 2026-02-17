@@ -159,22 +159,22 @@ ALERTAS_SHEET = "Alertas"
 
 
 def _inicializar_alertas():
-    """
-    Crea el archivo y hoja de alertas si no existen.
-    """
     if not os.path.exists(ALERTAS_FILE):
         wb = Workbook()
         ws = wb.active
         ws.title = ALERTAS_SHEET
-        ws.append(["ID", "Numero_Parte", "Descripcion", "Fecha"])
+        ws.append([
+            "ID",
+            "Numero_Parte_o_Area",
+            "Numero_Alerta",
+            "Descripcion",
+            "Fecha_Generacion",
+            "Vigente_Hasta"
+        ])
         wb.save(ALERTAS_FILE)
 
 
 def leer_alertas():
-    """
-    Lee todas las alertas desde el Excel.
-    Devuelve lista de diccionarios.
-    """
     _inicializar_alertas()
 
     wb = load_workbook(ALERTAS_FILE)
@@ -186,40 +186,52 @@ def leer_alertas():
         if row[0] is not None:
             alertas.append({
                 "id": row[0],
-                "numero_parte": str(row[1]) if row[1] else "",
-                "descripcion": str(row[2]) if row[2] else "",
-                "fecha": str(row[3]) if row[3] else ""
+                "numero_parte_area": str(row[1]) if row[1] else "",
+                "numero_alerta": str(row[2]) if row[2] else "",
+                "descripcion": str(row[3]) if row[3] else "",
+                "fecha_generacion": str(row[4]) if row[4] else "",
+                "vigente_hasta": str(row[5]) if row[5] else ""
             })
 
     return alertas
 
 
 def guardar_alertas(data):
-    """
-    Sobrescribe completamente el archivo con las alertas recibidas.
-    Regenera IDs automáticamente.
-    """
 
-    # Validación fuerte backend
     for alerta in data:
-        if not alerta["numero_parte"].isdigit() or len(alerta["numero_parte"]) != 10:
-            raise ValueError("Número de parte inválido. Debe tener 10 dígitos.")
+        campo = alerta["numero_parte_area"]
+
+        if not (
+            (campo.isdigit() and len(campo) == 10)
+            or campo in ["FA", "Corte", "Crimp"]
+        ):
+            raise ValueError(
+                "El campo debe ser 10 dígitos o FA, Corte, Crimp"
+            )
 
     wb = Workbook()
     ws = wb.active
     ws.title = ALERTAS_SHEET
 
-    ws.append(["ID", "Numero_Parte", "Descripcion", "Fecha"])
+    ws.append([
+        "ID",
+        "Numero_Parte_o_Area",
+        "Numero_Alerta",
+        "Descripcion",
+        "Fecha_Generacion",
+        "Vigente_Hasta"
+    ])
 
     for i, alerta in enumerate(data, start=1):
         ws.append([
             i,
-            alerta["numero_parte"],
+            alerta["numero_parte_area"],
+            alerta["numero_alerta"],
             alerta["descripcion"],
-            alerta["fecha"]
+            alerta["fecha_generacion"],
+            alerta["vigente_hasta"]
         ])
 
     wb.save(ALERTAS_FILE)
 
     return True
-
