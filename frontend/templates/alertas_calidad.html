@@ -2,42 +2,56 @@
 {% block content %}
 
 <style>
+:root {
+    --primary: #1e3a8a;
+    --bg-soft: #f4f6f9;
+    --card-soft: #f8fafc;
+    --danger-soft: #fdecec;
+    --warning-soft: #fff8e6;
+    --success-soft: #edf7ed;
+    --text-dark: #1f2937;
+}
+
 .container-alertas {
-    max-width: 1300px;
+    max-width: 1200px;
     margin: 40px auto;
     background: white;
     padding: 30px;
     border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
 }
 
 h1 {
-    color: #004aad;
-    margin-bottom: 10px;
+    color: var(--primary);
+    font-weight: 600;
 }
 
-/* ===== DASHBOARD ===== */
+/* ===== DASHBOARD SUAVE ===== */
 
 .dashboard {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin: 20px 0 30px 0;
+    gap: 10px;
+    margin: 20px 0 25px 0;
 }
 
 .card {
-    padding: 20px;
-    border-radius: 12px;
-    color: white;
-    font-weight: 600;
+    background: var(--card-soft);
+    padding: 12px;
+    border-radius: 10px;
     text-align: center;
-    font-size: 18px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dark);
+    border: 1px solid #e5e7eb;
 }
 
-.card.red { background: #d9534f; }
-.card.yellow { background: #f0ad4e; }
-.card.green { background: #5cb85c; }
-.card.blue { background: #004aad; }
+.card span {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 4px;
+}
 
 /* ===== FILTRO ===== */
 
@@ -46,10 +60,10 @@ h1 {
 }
 
 .filtro-container input {
-    width: 300px;
-    padding: 8px;
+    width: 280px;
+    padding: 7px;
     border-radius: 6px;
-    border: 1px solid #ccc;
+    border: 1px solid #d1d5db;
 }
 
 /* ===== TABLA ===== */
@@ -57,76 +71,81 @@ h1 {
 table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 10px;
 }
 
 th {
-    background: #004aad;
+    background: var(--primary);
     color: white;
     padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 td {
     padding: 8px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f1f1f1;
+    font-size: 14px;
 }
 
 tr:hover {
-    background: #f4f8ff;
+    background: #f9fafb;
 }
 
 tr.vencida {
-    background-color: #fde2e2;
+    background-color: var(--danger-soft);
 }
 
 tr.proxima {
-    background-color: #fff4d6;
+    background-color: var(--warning-soft);
 }
 
 input {
     width: 100%;
     padding: 6px;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid #d1d5db;
+    font-size: 13px;
 }
 
 button {
-    padding: 8px 14px;
+    padding: 7px 12px;
     border-radius: 6px;
     border: none;
-    background: #004aad;
+    background: var(--primary);
     color: white;
     cursor: pointer;
+    font-size: 13px;
 }
 
 button:hover {
-    background: #0066ff;
+    opacity: 0.9;
 }
 
 .delete-btn {
-    background: #c9302c;
+    background: #9ca3af;
 }
 
 .delete-btn:hover {
-    background: #ff0000;
+    background: #6b7280;
 }
 </style>
 
 <div class="container-alertas">
 
-<h1>🚨 Panel de Alertas de Calidad</h1>
+<h1>Alertas de Calidad</h1>
 <p>Bienvenido {{ user.capitalize() }}</p>
 
 <!-- DASHBOARD -->
 <div class="dashboard">
-    <div class="card red">🔴 Vencidas: <span id="countVencidas">0</span></div>
-    <div class="card yellow">🟡 Próximas: <span id="countProximas">0</span></div>
-    <div class="card green">🟢 Activas: <span id="countActivas">0</span></div>
-    <div class="card blue">📊 Total: <span id="countTotal">0</span></div>
+    <div class="card">Vencidas <span id="countVencidas">0</span></div>
+    <div class="card">Próximas <span id="countProximas">0</span></div>
+    <div class="card">Activas <span id="countActivas">0</span></div>
+    <div class="card">Total <span id="countTotal">0</span></div>
 </div>
 
-<!-- FILTRO -->
 <div class="filtro-container">
-    🔍 Buscar NP o Área:
+    Buscar:
     <input type="text" id="filtro" onkeyup="filtrar()">
 </div>
 
@@ -135,40 +154,51 @@ button:hover {
 <table id="tabla">
     <thead>
         <tr>
-            <th>Numero Parte / Área</th>
-            <th>Numero Alerta</th>
+            <th>NP / Área</th>
+            <th>No. Alerta</th>
             <th>Descripción</th>
-            <th>Fecha Generación</th>
+            <th>Generación</th>
             <th>Vigente Hasta</th>
-            <th>Eliminar</th>
+            <th></th>
         </tr>
     </thead>
     <tbody></tbody>
 </table>
 
 <br>
-<button onclick="guardar()">💾 Guardar Cambios</button>
+<button onclick="guardar()">Guardar Cambios</button>
 
 </div>
 
 <script>
 
+function normalizarArea(valor) {
+    if (!valor) return "";
+    const v = valor.trim().toLowerCase();
+
+    if (v === "fa") return "FA";
+    if (v === "corte") return "Corte";
+    if (v === "crimp") return "Crimp";
+
+    return valor.trim();
+}
+
 function evaluarVencimiento(fecha) {
     if (!fecha) return "activa";
 
     const hoy = new Date();
-    const vencimiento = new Date(fecha);
-    const diffDias = (vencimiento - hoy) / (1000 * 60 * 60 * 24);
+    hoy.setHours(0,0,0,0);
 
-    if (diffDias < 0) return "vencida";
-    if (diffDias <= 7) return "proxima";
+    const venc = new Date(fecha);
+    const diff = (venc - hoy) / (1000 * 60 * 60 * 24);
+
+    if (diff < 0) return "vencida";
+    if (diff <= 7) return "proxima";
     return "activa";
 }
 
 function actualizarDashboard() {
-    let vencidas = 0;
-    let proximas = 0;
-    let activas = 0;
+    let vencidas = 0, proximas = 0, activas = 0;
 
     document.querySelectorAll("#tabla tbody tr").forEach(row => {
         if (row.classList.contains("vencida")) vencidas++;
@@ -221,7 +251,7 @@ function agregarFila(np="", alerta="", desc="", fecha_gen="", vigente="") {
         <td><input type="text" value="${desc}"></td>
         <td><input type="date" value="${fecha_gen || ""}"></td>
         <td><input type="date" value="${vigente || ""}" onchange="cambiarFecha(this)"></td>
-        <td><button class="delete-btn" onclick="eliminarFila(this)">🗑</button></td>
+        <td><button class="delete-btn" onclick="eliminarFila(this)">✕</button></td>
     `;
 
     tbody.appendChild(row);
@@ -256,7 +286,7 @@ async function guardar() {
     for (let row of rows) {
         const inputs = row.querySelectorAll("input");
 
-        const numero_parte_area = inputs[0].value.trim();
+        let numero_parte_area = normalizarArea(inputs[0].value);
         const numero_alerta = inputs[1].value.trim();
         const descripcion = inputs[2].value.trim();
         const fecha_generacion = inputs[3].value;
@@ -289,7 +319,7 @@ async function guardar() {
     const result = await res.json();
 
     if (result.error) alert(result.error);
-    else alert("Guardado correctamente ✅");
+    else alert("Guardado correctamente");
 }
 
 cargar();
