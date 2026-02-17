@@ -154,8 +154,14 @@ def guardar_cambios_excel(hoja, datos):
 import os
 from openpyxl import Workbook, load_workbook
 
-ALERTAS_FILE = "backend/data/AlertasCalidad.xlsx"
+#ALERTAS_FILE = "backend/data/AlertasCalidad.xlsx"
 ALERTAS_SHEET = "Alertas"
+ALERTAS_FILE = os.path.join(os.getenv("HOME", "."), "data", "AlertasCalidad.xlsx")
+ALERTAS_DIR = os.path.dirname(ALERTAS_FILE)
+
+if not os.path.exists(ALERTAS_DIR):
+    os.makedirs(ALERTAS_DIR)
+
 
 
 def _inicializar_alertas():

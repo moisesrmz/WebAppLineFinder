@@ -91,3 +91,20 @@ def api_guardar_alertas():
         return jsonify({"error": str(e)}), 400
     except Exception as e:
         return jsonify({"error": "Error interno al guardar"}), 500
+
+@views_bp.route("/descargar")
+def descargar_alertas():
+
+    if "alert_user" not in session:
+        return redirect(url_for("auth.alert_login"))
+
+    from backend.services.excel_handler import ALERTAS_FILE
+
+    if not os.path.exists(ALERTAS_FILE):
+        return "No existe archivo de alertas aún."
+
+    return send_file(
+        ALERTAS_FILE,
+        as_attachment=True,
+        download_name="AlertasCalidad.xlsx"
+    )
