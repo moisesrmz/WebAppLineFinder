@@ -103,8 +103,11 @@ def descargar_alertas():
     if not os.path.exists(ALERTAS_FILE):
         return "No existe archivo de alertas aún."
 
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    nombre_descarga = f"AlertasCalidad_{timestamp}.xlsx"
+
     return send_file(
         ALERTAS_FILE,
         as_attachment=True,
-        download_name="AlertasCalidad.xlsx"
+        download_name=nombre_descarga
     )

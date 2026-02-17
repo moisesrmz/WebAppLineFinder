@@ -202,18 +202,29 @@ def leer_alertas():
     return alertas
 
 
+import shutil
+from datetime import datetime
+
 def guardar_alertas(data):
 
+    # 🔒 Validación fuerte
     for alerta in data:
         campo = alerta["numero_parte_area"]
 
         if not (
             (campo.isdigit() and len(campo) == 10)
-            or campo in ["FA", "Corte", "Crimp"]
+            or campo.strip().lower() in ["fa", "corte", "crimp"]
         ):
             raise ValueError(
                 "El campo debe ser 10 dígitos o FA, Corte, Crimp"
             )
+
+    # 📦 BACKUP automático
+    if os.path.exists(ALERTAS_FILE):
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_name = f"AlertasCalidad_backup_{timestamp}.xlsx"
+        backup_path = os.path.join(os.path.dirname(ALERTAS_FILE), backup_name)
+        shutil.copy2(ALERTAS_FILE, backup_path)
 
     wb = Workbook()
     ws = wb.active
@@ -241,3 +252,4 @@ def guardar_alertas(data):
     wb.save(ALERTAS_FILE)
 
     return True
+
