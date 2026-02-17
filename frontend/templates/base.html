@@ -7,10 +7,6 @@
     <title>{% block title %}Administration{% endblock %}</title>
 </head>
 <body>
-    <nav>
-        <a href="{{ url_for('views.index') }}">Inicio</a>
-        <a href="{{ url_for('editor.edit_excel') }}"></a>
-    </nav>
     <main>
         {% block content %}
         <p>Bienvenido a la aplicación.</p>  <!-- ✅ Esto se reemplazará con edit_excel.html -->
