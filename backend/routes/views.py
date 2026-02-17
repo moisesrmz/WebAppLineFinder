@@ -92,7 +92,7 @@ def api_guardar_alertas():
     except Exception as e:
         return jsonify({"error": "Error interno al guardar"}), 500
 
-@views_bp.route("/descargar")
+@views_bp.route("/alertas-calidad/descargar")
 def descargar_alertas():
 
     if "alert_user" not in session:
