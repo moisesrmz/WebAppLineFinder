@@ -145,6 +145,28 @@
         <div class="results">
             {{ mensaje|safe }}
         </div>
+        {% if alertas %}
+        <div class="results" style="margin-top:25px;">
+            <h3 style="color:#b91c1c;">⚠ Alertas de Calidad Asociadas</h3>
+            <table>
+                <tr>
+                    <th>No. Alerta</th>
+                    <th>Descripción</th>
+                    <th>Generación</th>
+                    <th>Vigente Hasta</th>
+                </tr>
+                {% for a in alertas %}
+                <tr>
+                    <td>{{ a.numero_alerta }}</td>
+                    <td>{{ a.descripcion }}</td>
+                    <td>{{ a.fecha_generacion }}</td>
+                    <td>{{ a.vigente_hasta }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endif %}
+
     </div>
 
     <!-- 🔘 Botones -->

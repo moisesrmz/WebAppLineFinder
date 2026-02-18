@@ -5,6 +5,8 @@ import os
 from datetime import datetime, timedelta
 from flask import Blueprint, render_template, request, send_file, session, redirect, url_for, jsonify
 from backend.services.excel_handler import buscar_numero_parte, buscar_modulo, leer_alertas, guardar_alertas
+from backend.services.excel_handler import leer_alertas
+
 
 views_bp = Blueprint("views", __name__)
 
@@ -22,6 +24,19 @@ def index():
 
         if entrada.isdigit() and len(entrada) == 10:
             mensaje, filas_resaltadas = buscar_numero_parte([entrada])
+            alertas_relacionadas = []
+
+            try:
+                todas_alertas = leer_alertas()
+
+                for alerta in todas_alertas:
+                    if alerta["numero_parte_area"].strip().lower() == entrada.strip().lower():
+                        alertas_relacionadas.append(alerta)
+
+            except Exception as e:
+                print("Error leyendo alertas:", e)
+                alertas_relacionadas = []
+
         else:
             mensaje, filas_resaltadas = buscar_modulo(entrada)
 
@@ -36,7 +51,8 @@ def index():
         "index.html",
         mensaje=mensaje,
         filas_resaltadas=filas_resaltadas,
-        ultima_actualizacion=ultima_actualizacion
+        ultima_actualizacion=ultima_actualizacion,
+        alertas=alertas_relacionadas
     )
 
 
