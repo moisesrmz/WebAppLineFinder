@@ -127,10 +127,23 @@ def alertas_calidad():
     if "alert_user" not in session:
         return redirect(url_for("auth.alert_login"))
 
+    from backend.services.excel_handler import ALERTAS_FILE
+
+    ultima_actualizacion = "Sin datos aún"
+
+    if os.path.exists(ALERTAS_FILE):
+        timestamp = os.path.getmtime(ALERTAS_FILE)
+        ultima_actualizacion = (
+            datetime.fromtimestamp(timestamp)
+            - timedelta(hours=6)
+        ).strftime("%Y-%m-%d %H:%M:%S")
+
     return render_template(
         "alertas_calidad.html",
-        user=session.get("alert_user")
+        user=session.get("alert_user"),
+        ultima_actualizacion=ultima_actualizacion
     )
+
 
 
 # ============================================================

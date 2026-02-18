@@ -161,12 +161,22 @@ button:hover {
 .delete-btn:hover {
     background: #6b7280;
 }
+.ultima-actualizacion {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 15px;
+}
+
 
 </style>
 
 <div class="container-alertas">
 
 <h1>Alertas de Calidad</h1>
+<div class="ultima-actualizacion">
+    🕒 Última actualización: {{ ultima_actualizacion }}
+</div>
+
 <p>Bienvenido {{ user.capitalize() }}</p>
 
 <!-- DASHBOARD -->
