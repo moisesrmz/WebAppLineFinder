@@ -150,26 +150,40 @@ def guardar_cambios_excel(hoja, datos):
     except Exception as e:
         return f"Error: {str(e)}"
 # ============================================================
-# 🚨 ALERTAS DE CALIDAD
+# 🚨 ALERTAS DE CALIDAD (PERSISTENTE EN /home)
 # ============================================================
 
 import os
+import shutil
+from datetime import datetime
 from openpyxl import Workbook, load_workbook
 
-#ALERTAS_FILE = "backend/data/AlertasCalidad.xlsx"
 ALERTAS_SHEET = "Alertas"
-#ALERTAS_FILE = os.path.join(os.getenv("HOME", "."), "data", "AlertasCalidad.xlsx")
-ALERTAS_FILE = "/home/data/AlertasCalidad.xlsx"
 
-ALERTAS_DIR = os.path.dirname(ALERTAS_FILE)
+# 🔐 Ruta persistente real en Azure
+BASE_HOME = "/home"
 
-if not os.path.exists(ALERTAS_DIR):
-    os.makedirs(ALERTAS_DIR)
+if not os.path.exists(BASE_HOME):
+    # fallback para entorno local
+    BASE_HOME = os.getcwd()
 
+ALERTAS_DIR = os.path.join(BASE_HOME, "data")
+BACKUP_DIR = os.path.join(BASE_HOME, "backups")
+
+ALERTAS_FILE = os.path.join(ALERTAS_DIR, "AlertasCalidad.xlsx")
+
+# Crear carpetas si no existen
+os.makedirs(ALERTAS_DIR, exist_ok=True)
+os.makedirs(BACKUP_DIR, exist_ok=True)
+
+print("=== ALERTAS PATH ===")
+print("BASE_HOME:", BASE_HOME)
+print("ALERTAS_FILE:", ALERTAS_FILE)
 
 
 def _inicializar_alertas():
     if not os.path.exists(ALERTAS_FILE):
+        print("Creando archivo inicial de alertas...")
         wb = Workbook()
         ws = wb.active
         ws.title = ALERTAS_SHEET
@@ -186,6 +200,9 @@ def _inicializar_alertas():
 
 def leer_alertas():
     _inicializar_alertas()
+
+    print("Leyendo alertas desde:", ALERTAS_FILE)
+    print("Existe archivo?:", os.path.exists(ALERTAS_FILE))
 
     wb = load_workbook(ALERTAS_FILE)
     ws = wb[ALERTAS_SHEET]
@@ -205,7 +222,10 @@ def leer_alertas():
 
     return alertas
 
+
 def guardar_alertas(data):
+
+    _inicializar_alertas()
 
     # 🔒 Validación fuerte
     for alerta in data:
@@ -219,12 +239,16 @@ def guardar_alertas(data):
                 "El campo debe ser 10 dígitos o FA, Corte, Crimp"
             )
 
-    # 📦 BACKUP automático
+    print("Guardando alertas en:", ALERTAS_FILE)
+
+    # 📦 BACKUP automático (guardado en carpeta separada)
     if os.path.exists(ALERTAS_FILE):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_name = f"AlertasCalidad_backup_{timestamp}.xlsx"
-        backup_path = os.path.join(os.path.dirname(ALERTAS_FILE), backup_name)
+        backup_path = os.path.join(BACKUP_DIR, backup_name)
+
         shutil.copy2(ALERTAS_FILE, backup_path)
+        print("Backup creado en:", backup_path)
 
     wb = Workbook()
     ws = wb.active
@@ -251,5 +275,5 @@ def guardar_alertas(data):
 
     wb.save(ALERTAS_FILE)
 
+    print("Guardado exitoso.")
     return True
-
