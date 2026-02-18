@@ -92,7 +92,7 @@ def buscar_modulo(modulo):
         df = pd.read_excel(config.DATA_FILE, sheet_name="Hoja2", engine="openpyxl", dtype=str)
         df.fillna("", inplace=True)  # Evita errores por NaN
     except Exception as e:
-        print(f"❌ Error al leer Hoja2: {e}")
+        print(f" Error al leer Hoja2: {e}")
         return f"Error al leer el archivo Excel: {str(e)}", []
 
     # ✅ Convertir todo a minúsculas y quitar espacios
@@ -123,7 +123,7 @@ def buscar_modulo(modulo):
     else:
         mensaje += f"<div class='resultado'><h3>No se encontraron líneas con el módulo '{modulo}'.</h3></div>"
 
-    print(f"🔎 Buscar módulo: '{modulo}', coincidencias encontradas: {len(coincidencias)}")
+    print(f" Buscar módulo: '{modulo}', coincidencias encontradas: {len(coincidencias)}")
     return mensaje, filas_resaltadas
 
 # Leer datos de una hoja del Excel
