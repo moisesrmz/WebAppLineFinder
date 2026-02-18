@@ -142,6 +142,12 @@
         footer a:hover {
             text-decoration: underline;
         }
+        /* 🔴 Alerta vencida */
+        .alerta-vencida {
+            background-color: #fff1f1;
+            box-shadow: inset 4px 0 0 #e8a3a3;
+        }
+
     </style>
 
 </head>
@@ -170,7 +176,8 @@
                     <th>Vigente Hasta</th>
                 </tr>
                 {% for a in alertas %}
-                <tr>
+                <tr class="{% if a.vigente_hasta and a.vigente_hasta < current_date %}alerta-vencida{% endif %}">
+
                     <td>{{ a.numero_alerta }}</td>
                     <td>{{ a.descripcion }}</td>
                     <td>{{ a.fecha_generacion }}</td>

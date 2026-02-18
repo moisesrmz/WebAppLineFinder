@@ -6,7 +6,7 @@ from flask import (
 
 import backend.config as config
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 from backend.services.excel_handler import (
     buscar_numero_parte,
@@ -32,6 +32,7 @@ def index():
     mensaje = ""
     filas_resaltadas = []
     alertas_relacionadas = []
+    current_date = date.today().strftime("%Y-%m-%d")  # 🔥 NUEVO
 
     if request.method == "POST":
 
@@ -85,7 +86,7 @@ def index():
         else:
             mensaje, filas_resaltadas = buscar_modulo(entrada)
 
-    # Fecha última actualización
+    # Fecha última actualización base principal
     ultima_actualizacion = "Archivo no encontrado"
     if os.path.exists(config.DATA_FILE):
         timestamp_modificacion = os.path.getmtime(config.DATA_FILE)
@@ -98,7 +99,8 @@ def index():
         mensaje=mensaje,
         filas_resaltadas=filas_resaltadas,
         ultima_actualizacion=ultima_actualizacion,
-        alertas=alertas_relacionadas
+        alertas=alertas_relacionadas,
+        current_date=current_date   # 🔥 NUEVO
     )
 
 
@@ -127,8 +129,6 @@ def alertas_calidad():
     if "alert_user" not in session:
         return redirect(url_for("auth.alert_login"))
 
-    from backend.services.excel_handler import ALERTAS_FILE
-
     ultima_actualizacion = "Sin datos aún"
 
     if os.path.exists(ALERTAS_FILE):
@@ -143,6 +143,7 @@ def alertas_calidad():
         user=session.get("alert_user"),
         ultima_actualizacion=ultima_actualizacion
     )
+
 
 # ============================================================
 # 🚨 API ALERTAS
