@@ -18,7 +18,7 @@ def index():
 
     mensaje = ""
     filas_resaltadas = []
-
+    alertas_relacionadas = []  # ✅ siempre existe
     if request.method == "POST":
         entrada = request.form["numero_parte"].strip()
 
