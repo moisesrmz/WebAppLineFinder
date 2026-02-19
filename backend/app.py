@@ -3,10 +3,15 @@ from backend.routes.views import init_routes
 from backend.routes.editor import editor_bp
 from backend.routes.auth import auth_bp  # ✅ Importamos autenticación
 import backend.config as config
+from datetime import timedelta
+
+
+
 
 app = Flask(__name__, template_folder="../frontend/templates", static_folder="../frontend/static")
 app.config.from_object(config)
 app.secret_key = "supersecretkey"  # ✅ Clave para manejar sesiones
+app.permanent_session_lifetime = timedelta(minutes=20)
 
 # ✅ Registrar Blueprints
 init_routes(app)
