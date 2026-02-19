@@ -4,7 +4,7 @@ auth_bp = Blueprint("auth", __name__)
 
 USERS = {
     "admin": "admin",
-    "AuditorQA": "MQA2026",
+    "auditorqa": "MQA2026",
     "rodo": "rodo"
 }
 
