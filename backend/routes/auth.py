@@ -16,7 +16,7 @@ def alert_login():
         password = request.form.get("password", "").strip()
 
         if username in USERS and USERS[username] == password:
-            session.permanent = True
+            #session.permanent = True
             session["alert_user"] = username
             #flash(f"Bienvenido {username.capitalize()} 👋", "success")
             return redirect(url_for("views.alertas_calidad"))
