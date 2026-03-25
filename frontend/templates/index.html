@@ -170,9 +170,9 @@
         </div>
         {% if alertas %}
         <div class="results" style="margin-top:25px;">
-            <h3 style="color:#0860c4;"><a href="file://///GUMFP01/Group/DATA/QUALITY/CUSTOMER/BASES/BaseAlerta" target="_blank" rel="noopener noreferrer" style="color:#0860c4; text-decoration:underline;">⚠ Alertas de Calidad Asociadas</a></h3>
-            <p style="font-size:14px; color:#666; margin:5px 0;">Ruta: <span style="font-family:monospace; background:#f0f0f0; padding:2px 4px; border-radius:3px;">\\GUMFP01\Group\DATA\QUALITY\CUSTOMER\BASES\BaseAlerta</span></p>
-            <p style="font-size:13px; color:#a00;">Nota: si tu navegador bloquea el link, abre la ruta directamente desde el Explorador de Windows.</p>
+            <h3 style="color:#0860c4;"><a id="link-unc" href="file://///GUMFP01/Group/DATA/QUALITY/CUSTOMER/BASES/BaseAlerta" target="_blank" rel="noopener noreferrer" style="color:#0860c4; text-decoration:underline;">⚠ Alertas de Calidad Asociadas</a></h3>
+            <p style="font-size:14px; color:#666; margin:5px 0;">Ruta: <span id="ruta-unc" style="font-family:monospace; background:#f0f0f0; padding:2px 4px; border-radius:3px;">\\GUMFP01\Group\DATA\QUALITY\CUSTOMER\BASES\BaseAlerta</span></p>
+            <p id="status-unc" style="font-size:13px; color:#a00;">Haz clic en el texto para abrir en nueva pestaña. Si el navegador lo bloquea, usa copia/pega en Explorador.</p>
             <table>
                 <tr>
                     <th>No. Alerta</th>
@@ -194,6 +194,28 @@
         {% endif %}
 
     </div>
+
+    <script>
+        const uncPath = 'file://///GUMFP01/Group/DATA/QUALITY/CUSTOMER/BASES/BaseAlerta';
+
+        document.getElementById('link-unc').addEventListener('click', (e) => {
+            e.preventDefault();
+            const ventana = window.open(uncPath, '_blank');
+
+            if (ventana) {
+                document.getElementById('status-unc').innerText = 'Se abrió en nueva pestaña/ventana.';
+                ventana.focus();
+            } else {
+                document.getElementById('status-unc').innerText = 'El navegador bloqueó la apertura. Copia manualmente la ruta o usa el Explorador de Windows con Ctrl+L.';
+            }
+
+            navigator.clipboard.writeText('\\\\GUMFP01\\Group\\DATA\\QUALITY\\CUSTOMER\\BASES\\BaseAlerta').then(() => {
+                document.getElementById('status-unc').innerText += ' Ruta copiada al portapapeles.';
+            }).catch(() => {
+                document.getElementById('status-unc').innerText += ' No se pudo copiar automáticamente.';
+            });
+        });
+    </script>
 
     <!-- 🔘 Botones -->
     <div class="center-button">
