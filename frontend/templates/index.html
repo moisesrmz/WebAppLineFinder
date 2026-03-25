@@ -170,7 +170,7 @@
         </div>
         {% if alertas %}
         <div class="results" style="margin-top:25px;">
-            <h3 style="color:#0860c4;"><a id="link-alertas-calidad" href="#" style="color:#0860c4; text-decoration:underline;">⚠ Alertas de Calidad Asociadas</a></h3>
+            <h3 style="color:#0860c4;"><a href="about:blank" target="_blank" style="color:#0860c4; text-decoration:underline;">⚠ Alertas de Calidad Asociadas</a></h3>
             <table>
                 <tr>
                     <th>No. Alerta</th>
@@ -192,13 +192,6 @@
         {% endif %}
 
     </div>
-
-    <script>
-        document.getElementById('link-alertas-calidad').addEventListener('click', function(event) {
-            event.preventDefault();
-            window.open('about:blank', '_blank');
-        });
-    </script>
 
     <!-- 🔘 Botones -->
     <div class="center-button">
