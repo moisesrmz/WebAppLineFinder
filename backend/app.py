@@ -4,7 +4,7 @@ from backend.routes.editor import editor_bp
 from backend.routes.auth import auth_bp  # ✅ Importamos autenticación
 import backend.config as config
 from datetime import timedelta
-
+import os
 
 
 
@@ -18,7 +18,6 @@ init_routes(app)
 app.register_blueprint(editor_bp)
 app.register_blueprint(auth_bp)  # ✅ Registrar autenticación
 
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))  

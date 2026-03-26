@@ -170,8 +170,13 @@
         </div>
         {% if alertas %}
         <div class="results" style="margin-top:25px;">
-            <h3 style="color:#0860c4;"><a id="link-unc" href="#" style="color:#0860c4; text-decoration:underline;">⚠ Alertas de Calidad Asociadas</a></h3>
-            <p id="status-unc" style="font-size:13px; color:#a00;">Clic para abrir nueva pestaña en blanco y navegar a la ruta UNC.</p>
+            <h3 style="color:#0860c4;">
+                <a href="javascript:void(0);"
+                onclick="window.open('file://///GUMFP01/Group/DATA/QUALITY/CUSTOMER/BASES/BaseAlerta/')"
+                style="color:#0860c4; text-decoration:underline;">
+                ⚠ Alertas de Calidad Asociadas
+                </a>
+            </h3>
             <table>
                 <tr>
                     <th>No. Alerta</th>
@@ -193,25 +198,6 @@
         {% endif %}
 
     </div>
-
-    <script>
-        const uncPath = 'file://gumfp01/Group/DATA/QUALITY/CUSTOMER/BASES/BaseAlerta/';
-
-        document.getElementById('link-unc').addEventListener('click', function (e) {
-            e.preventDefault();
-            const newTab = window.open('about:blank', '_blank');
-            if (newTab) {
-                try {
-                    newTab.location.href = uncPath;
-                    document.getElementById('status-unc').innerText = 'Abriendo ruta en nueva pestaña...';
-                } catch (err) {
-                    document.getElementById('status-unc').innerText = 'No se pudo redirigir a file:// por políticas del navegador; pega manualmente la URL.';
-                }
-            } else {
-                document.getElementById('status-unc').innerText = 'El navegador bloqueó la apertura de nueva pestaña.';
-            }
-        });
-    </script>
 
     <!-- 🔘 Botones -->
     <div class="center-button">
